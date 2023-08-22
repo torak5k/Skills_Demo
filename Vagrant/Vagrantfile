@@ -1,0 +1,24 @@
+# The purpose of this Vagrant file is to allow for the easy spin up of VMs for Nmap scans.
+
+
+Vagrant.configure("2") do |config|
+  config.vm.network "private_network", type: "dhcp"
+  config.vm.provider "virtualbox"
+
+  config.vm.define "vuln_linux" do |vuln_linux|
+    vuln_linux.vm.box = "ubuntu/trusty64"
+  end # Ubuntu 14.04. Customize to add vulnerable services to this machine.
+
+
+  config.vm.define "scanner" do |scanner|
+    scanner.vm.box = "generic/ubuntu2004"
+    scanner.vm.provision "shell", inline: <<-SHELL
+      apt update
+      apt install -y nmap
+      hostnamectl set-hostname scanner
+      nmap --script-updatedb
+    SHELL
+  end # Ubuntu 20.04. To log into this, just enter in vagrant ssh scanner.
+
+end
+
