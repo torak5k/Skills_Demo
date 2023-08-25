@@ -1,5 +1,9 @@
 # The purpose of this Vagrant file is to allow for the easy spin up of VMs for Nmap scans.
 
+required_plugins = %w( vagrant-vbguest )
+required_plugins.each do |plugin|
+  system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+end
 
 Vagrant.configure("2") do |config|
   config.vm.network "private_network", type: "dhcp"
